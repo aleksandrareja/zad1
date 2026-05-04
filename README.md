@@ -51,6 +51,8 @@ docker history zad1:latest
 
 docker images zad1:latest
 
+Obraz ma 4 warstwy i rozmiar 106MB
+
 ### Sprawdzenie healthcheck
 
 docker ps
@@ -129,6 +131,8 @@ Wykorzystano eksporter registry (--cache-from type=registry), co pozwala na pobi
 
 #### 3. Obraz został przesłany do repozytorium zewnętrznego pod tagiem multiarch
 
+docker buildx build --platform linux/amd64,linux/arm64 -t aleksandrareja/zad1:multiarch --cache-to type=inline --cache-from type=registry,ref=aleksandrareja/zad1:multiarch --push .
+
 #### 4. Za pomocą polecenia docker buildx imagetools inspect potwierdzono, że manifest obrazu zawiera poprawne deklaracje dla platform linux/amd64 oraz linux/arm64.
 
 docker buildx imagetools inspect aleksandrareja/zad1:multiarch
@@ -164,45 +168,45 @@ Manifests:
 docker buildx prune -f
 
 docker buildx build --platform linux/amd64,linux/arm64 -t aleksandrareja/zad1:multiarch --push --cache-to type=inline --cache-from type=registry,ref=aleksandrareja/zad1:multiarch .
-[+] Building 16.8s (22/22) FINISHED                                       docker-container:moj_builder
- => [internal] load build definition from Dockerfile                                              0.2s
- => => transferring dockerfile: 692B                                                              0.1s
- => [linux/amd64 internal] load metadata for docker.io/library/alpine:3.21                        2.5s
- => [linux/arm64 internal] load metadata for docker.io/library/alpine:3.21                        2.5s
- => [auth] library/alpine:pull token for registry-1.docker.io                                     0.0s
+[+] Building 14.1s (20/20) FINISHED                                       docker-container:moj_builder
+ => [internal] load build definition from Dockerfile                                              0.1s
+ => => transferring dockerfile: 1.28kB                                                            0.1s
+ => [linux/arm64 internal] load metadata for docker.io/library/alpine:3.21                        2.0s
+ => [linux/amd64 internal] load metadata for docker.io/library/alpine:3.21                        2.0s
  => [internal] load .dockerignore                                                                 0.1s
  => => transferring context: 2B                                                                   0.0s
- => importing cache manifest from aleksandrareja/zad1:multiarch                                   3.0s
+ => importing cache manifest from aleksandrareja/zad1:multiarch                                   2.0s
  => => inferred cache manifest type: application/vnd.oci.image.index.v1+json                      0.0s
- => [internal] load build context                                                                 0.3s
+ => [internal] load build context                                                                 0.1s
  => => transferring context: 8.27kB                                                               0.0s
- => [linux/amd64 builder 1/3] FROM docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa  3.0s
+ => [linux/arm64 builder 1/3] FROM docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa  0.1s
  => => resolve docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa1bc06e426dc093194845  0.0s
- => => sha256:897d797d2723cf0e318402f4d6f37d51b011517e5cf09246b22155f0fa90dc81 3.65MB / 3.65MB    1.8s
- => => extracting sha256:897d797d2723cf0e318402f4d6f37d51b011517e5cf09246b22155f0fa90dc81         1.0s
- => [auth] aleksandrareja/zad1:pull token for registry-1.docker.io                                0.0s
- => [linux/arm64 builder 1/3] FROM docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa  0.2s
- => => resolve docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa1bc06e426dc093194845  0.2s
+ => [linux/amd64 builder 1/3] FROM docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa  3.1s
+ => => resolve docker.io/library/alpine:3.21@sha256:48b0309ca019d89d40f670aa1bc06e426dc093194845  0.1s
+ => => sha256:897d797d2723cf0e318402f4d6f37d51b011517e5cf09246b22155f0fa90dc81 3.65MB / 3.65MB    2.0s
+ => => extracting sha256:897d797d2723cf0e318402f4d6f37d51b011517e5cf09246b22155f0fa90dc81         0.8s
  => CACHED [linux/arm64 stage-1 2/4] RUN apk update && apk upgrade && apk add --no-cache nodejs   0.0s
  => CACHED [linux/arm64 stage-1 3/4] WORKDIR /app                                                 0.0s
  => CACHED [linux/arm64 builder 2/3] WORKDIR /app                                                 0.0s
  => CACHED [linux/arm64 builder 3/3] COPY server.js index.html ./                                 0.0s
- => CACHED [linux/arm64 stage-1 4/4] COPY --from=builder /app/server.js /app/index.html ./        0.3s
- => [linux/amd64 builder 2/3] WORKDIR /app                                                        0.1s
+ => CACHED [linux/arm64 stage-1 4/4] COPY --from=builder --chown=appuser:appgroup /app/server.js  0.4s
+ => [linux/amd64 builder 2/3] WORKDIR /app                                                        0.2s
  => [linux/amd64 builder 3/3] COPY server.js index.html ./                                        0.2s
  => CACHED [linux/amd64 stage-1 2/4] RUN apk update && apk upgrade && apk add --no-cache nodejs   0.0s
  => CACHED [linux/amd64 stage-1 3/4] WORKDIR /app                                                 0.0s
- => CACHED [linux/amd64 stage-1 4/4] COPY --from=builder /app/server.js /app/index.html ./        0.2s
- => exporting to image                                                                            6.8s
+ => CACHED [linux/amd64 stage-1 4/4] COPY --from=builder --chown=appuser:appgroup /app/server.js  0.2s
+ => exporting to image                                                                            5.6s
  => => exporting layers                                                                           0.0s
  => => preparing layers for inline cache                                                          0.1s
- => => exporting manifest sha256:8591e5bc890e9381c1781a83b9129b37c72cba9f9956e20df502bf4f3d33f96  0.0s
- => => exporting config sha256:3fb9de8fbb619e4aa79656c12a39c8338091e70ffaee6ca253876dc6180230de   0.0s
- => => exporting attestation manifest sha256:01cd5db7e66d6e2f0973b1e4933d15c52b20d066271e4082b92  0.1s
- => => exporting manifest sha256:fb448d15a886f2870b9deccb55a4c3e1566e26bbced6855be1f39ed4b74a96f  0.1s
- => => exporting config sha256:e7673e3a9dde09b95b6c14a694ffa2e5e48d279966c0fed667fb77efbb60d512   0.1s
- => => exporting attestation manifest sha256:fd0cc1a6236df664e3029d9c06b33c20f69cd865047d82a3f9f  0.1s
- => => exporting manifest list sha256:db441557762f009cca60b305f68ec2b5209ff276c151a71fab11771a2c  0.1s
- => => pushing layers                                                                             1.9s
- => => pushing manifest for docker.io/aleksandrareja/zad1:multiarch@sha256:db441557762f009cca60b  4.2s
+ => => exporting manifest sha256:726b534ffaf766e8696cedfb38ae8e0662fa049bfcd0b880f3f05dd78e66e4e  0.0s
+ => => exporting config sha256:2a7b5cb6ea7a5bb1b19a6f7bf13545bdf8718fcb49d22c9ff10bec0e2b71880d   0.0s
+ => => exporting attestation manifest sha256:6213c71bdab89ff26f4e387d8f1aba6e8ba31b3c84f9b2d3c25  0.1s
+ => => exporting manifest sha256:490c5978d258fcd6a46304e61cd3c0aebe1ceba8dad0274d16e80c2e0cf1786  0.0s
+ => => exporting config sha256:f73a38fb5a21255991f80e8e66d2b6478c7af6c1862c5da1dc60d9a03f429e3d   0.0s
+ => => exporting attestation manifest sha256:5f26b41427d6f115df4d74f199d361b0749783caba30b9e9adb  0.1s
+ => => exporting manifest list sha256:8d7154922fd169507b5c2984d46e495a27b033f698c482e22f8998562c  0.0s
+ => => pushing layers                                                                             1.6s
+ => => pushing manifest for docker.io/aleksandrareja/zad1:multiarch@sha256:8d7154922fd169507b5c2  3.6s
  => [auth] aleksandrareja/zad1:pull,push token for registry-1.docker.io                           0.0s
+
+Mimo wykonania docker buildx prune -f, który wyczyścił lokalny cache, builder był w stanie pobrać metadane cache'u bezpośrednio z Docker Hub, co potwierdza linia importing cache manifest
