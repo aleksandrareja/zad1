@@ -19,7 +19,7 @@ Aplikacja została zrealizowana w języku JavaScript (Node.js) z wykorzystaniem 
 ### 3. Optymalizacja Dockerfile
 Plik Dockerfile został opracowany z uwzględnieniem następujących technik:
 - **Wieloetapowe budowanie (Multi-stage build):** Rozdzielenie etapu przygotowania plików od etapu produkcyjnego w celu usunięcia zbędnych artefaktów.
-- **Obraz bazowy Alpine:** Zastosowanie czystej dystrybucji Alpine Linux 3.21 zamiast pełnego obrazu Node.js zredukowało rozmiar obrazu z ok. 180 MB do ok. 60 MB.
+- **Obraz bazowy Alpine:** Zastosowanie czystej dystrybucji Alpine Linux 3.21 zamiast pełnego obrazu Node.js zredukowało rozmiar obrazu z ok. 180 MB do ok. 80 MB.
 - **Minimalizacja warstw:** Grupowanie instrukcji oraz kopiowanie tylko niezbędnych plików binarnych.
 - **Standard OCI:** Dodano etykiety `LABEL` z danymi autora zgodnie ze standardem.
 - **Healthcheck:** Zaimplementowano mechanizm sprawdzający stan serwera za pomocą skryptu Node.js (bez instalacji dodatkowych narzędzi typu curl).
@@ -40,12 +40,21 @@ docker run -d -p 8080:3000 --name weather-app zad1:latest
 
 docker logs weather-app
 
+Data uruchomienia: 5/4/2026, 9:16:39 AM
+Autor programu: Aleksandra Reja
+Aplikacja nasłuchuje na porcie: 3000
+
 #### Sprawdzenie warstw i rozmiaru obrazu
 
 docker history zad1:latest
 
 docker images zad1:latest
 
+Rozmiar obrazu raportowany przez polecenie docker images (106 MB) jest wyższy niż suma warstw systemowych (ok. 80 MB), co wynika z dołączenia do obrazu metadanych generowanych przez narzędzie Buildx. Realna waga warstw została zminimalizowana poprzez wybór dystrybucji Alpine oraz rezygnację z menedżerów pakietów npm/yarn.
+
+### Sprawdzenie healthcheck
+
+docker ps
 
 ### 5. Analiza podatności na zagrożenia
 

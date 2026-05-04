@@ -1,20 +1,31 @@
+#etap 1
+#wykorzystujemy lekki obraz Alpine
 FROM alpine:3.21 AS builder
+
+#ustawienie katalogu roboczego wewnątrz kontenera
 WORKDIR /app
+#kopiowanie plików źródłowych aplikacji do etapu builder
 COPY server.js index.html ./
 
 
 #etap 2
 FROM alpine:3.21
 
-#instalacja tylko nodejs bez yarn, --no-cache zeby pliki instalacyjne nie zostaly w obrazie
-RUN apk update && apk upgrade && apk add --no-cache nodejs
+
+#aktualizacja systemu i instalacja Node.js
+#'apk upgrade' kluczowe dla załatania luk bezpieczeństwa
+#'--no-cache' zapobiega zapisywaniu plików instalacyjnych
+#rm -rf' ręczne usunięcie pozostałości cache'u w tej samej warstwie
+RUN apk update && apk upgrade && apk add --no-cache nodejs && rm -rf /var/cache/apk/*
 
 LABEL org.opencontainers.image.authors="Aleksandra Reja"
 
 WORKDIR /app
 
+#kopiowanie wyłącznie niezbędnych plików z etapu builder.
 COPY --from=builder /app/server.js /app/index.html ./
 
+#port, na którym nasłuchuje serwer Node.js
 EXPOSE 3000
 
 #healthcheck bez curla
