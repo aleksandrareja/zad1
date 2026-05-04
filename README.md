@@ -11,7 +11,6 @@ Aplikacja została zrealizowana w języku JavaScript (Node.js) z wykorzystaniem 
 
 **Funkcjonalność:**
 - **Logi startowe:** Zaraz po uruchomieniu, aplikacja wypisuje w logach systemowych datę uruchomienia, imię i nazwisko autora oraz port TCP, na którym nasłuchuje.
-- **Interfejs UI:** Nowoczesny interfejs w stylu aplikacji pogodowej, wykorzystujący Tailwind CSS.
 - **Logika pogodowa:** Umożliwia wybór kraju i miasta z predefiniowanej listy. Dane o aktualnej pogodzie pobierane są dynamicznie z API Open-Meteo.
 
 ---
